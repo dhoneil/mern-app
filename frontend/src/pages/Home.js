@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import {UseWorkoutsContext} from '../hooks/UseWorkoutsContext'
 
 //components
 import WorkoutDetails from '../components/workoutDetails'
+import WorkoutForm from '../components/workoutForm'
 
 const Home = function () {
-  const [workoutsList, setworkouts] = useState(null);
+  const {workouts,dispatch} = UseWorkoutsContext()
 
   //on initialized
   useEffect(function () {
@@ -16,19 +18,21 @@ const Home = function () {
 
       //check if response is ok
       if (response.ok) {
-        setworkouts(json);
+        dispatch({type:'SET_WORKOUTS',payload:json})
       }
     };
+
     fetchWorkouts();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="home">
       <div className="workouts">
-        {workoutsList && workoutsList.map((w) => (
+        {workouts && workouts.map((w) => (
             <WorkoutDetails key={w._id} workout={w}/>
         ))}
       </div>
+      <WorkoutForm/>
     </div>
   );
 };
